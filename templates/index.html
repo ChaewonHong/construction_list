@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h4>filter</h4>
+<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+        <label class="btn btn-outline-primary" for="btnradio1">전체</label>
+      
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio2">신입</label>
+      
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio3">경력</label>
+      </div>
+
+  
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        직무 선택
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">건축 시공</a></li>
+        <li><a class="dropdown-item" href="#">토목 시공</a></li>
+        <li><a class="dropdown-item" href="#">건축 설계</a></li>
+        <li><a class="dropdown-item" href="#">토목 설계</a></li>
+        <li><a class="dropdown-item" href="#">공무</a></li>
+        <li><a class="dropdown-item" href="#">국내 영업</a></li>
+        <li><a class="dropdown-item" href="#">해외 영업</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+<div class="job-list">
+    <h2>공고 리스트</h2>
+    <div id="jobList"></div>
+</div>
+
+<script>
+    function loadJobData() {
+        fetch("/api/get_saramin_jobs?keywords=건설")
+            .then(response => response.json())
+            .then(data => {
+                const jobList = document.getElementById("jobList");
+                jobList.innerHTML = "";
+                data.jobs.forEach(job => {
+                    const jobItem = document.createElement("div");
+                    jobItem.className = "job-item";
+                    jobItem.innerHTML = `<strong>${job.title}</strong> - ${job.company} <br> 마감일: ${job.date}`;
+                    jobList.appendChild(jobItem);
+                });
+            })
+            .catch(error => console.error("Error:", error));
+    }
+    document.addEventListener("DOMContentLoaded", loadJobData);
+</script>
+{% endblock %}
